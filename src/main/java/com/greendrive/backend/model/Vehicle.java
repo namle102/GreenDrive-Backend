@@ -1,27 +1,46 @@
 package com.greendrive.backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Column(unique = true)
+    private String vin;
+
+    @NotBlank
     private String make;
+
+    @NotBlank
+    private String shape;
+
+    @NotBlank
     private String model;
+
+    @NotBlank
     private String color;
+
+    @Min(2000)
     private int year;
+
+    @Min(0)
     private int mileage;
+
+    @NotBlank
+    private boolean accidentHistory;
+
+    @DecimalMin(value = "0.0", inclusive = false)
     private double price;
 }
