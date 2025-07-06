@@ -21,10 +21,10 @@ public class Vehicle {
     private String vin;
 
     @NotBlank
-    private String make;
+    private String shape;
 
     @NotBlank
-    private String shape;
+    private String make;
 
     @NotBlank
     private String model;
@@ -38,7 +38,7 @@ public class Vehicle {
     @Min(0)
     private int mileage;
 
-    @NotBlank
+    @NotNull
     private boolean accidentHistory;
 
     @DecimalMin(value = "0.0", inclusive = false)
