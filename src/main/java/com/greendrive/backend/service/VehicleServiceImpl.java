@@ -32,6 +32,12 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    public Vehicle findById(Long vehicleId) {
+        return vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
+    }
+
+    @Override
     public List<Vehicle> sortBy(String field, String direction) {
         Sort.Direction dir = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
 
@@ -53,8 +59,38 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Vehicle findById(Long vehicleId) {
-        return vehicleRepository.findById(vehicleId)
+    public Vehicle addVehicle(Vehicle vehicle) {
+        Vehicle savedVehicle = vehicleRepository.findByVin(vehicle.getVin());
+
+        if (savedVehicle != null) {
+            throw new APIException("Vehicle with vin#: " + vehicle.getVin() + " already exists");
+        }
+        return vehicleRepository.save(vehicle);
+    }
+
+    @Override
+    public Vehicle updateVehicle(Long vehicleId, Vehicle vehicle) {
+        Vehicle savedVehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
+
+        savedVehicle.setVin(vehicle.getVin());
+        savedVehicle.setMake(vehicle.getMake());
+        savedVehicle.setShape(vehicle.getShape());
+        savedVehicle.setModel(vehicle.getModel());
+        savedVehicle.setColor(vehicle.getColor());
+        savedVehicle.setYear(vehicle.getYear());
+        savedVehicle.setMileage(vehicle.getMileage());
+        savedVehicle.setAccidentHistory(vehicle.isAccidentHistory());
+        savedVehicle.setPrice(vehicle.getPrice());
+        vehicleRepository.save(savedVehicle);
+        return savedVehicle;
+    }
+
+    @Override
+    public void deleteVehicle(Long vehicleId) {
+        Vehicle savedVehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
+
+        vehicleRepository.delete(savedVehicle);
     }
 }
