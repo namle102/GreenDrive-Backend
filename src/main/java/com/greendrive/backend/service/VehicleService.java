@@ -1,6 +1,8 @@
 package com.greendrive.backend.service;
 
 import com.greendrive.backend.model.Vehicle;
+import com.greendrive.backend.payload.VehicleDTO;
+import com.greendrive.backend.payload.VehicleResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,15 +12,15 @@ import java.util.List;
 public interface VehicleService {
 
     // CRUD, API #1
-    Page<Vehicle> findAll(Pageable pageable);
-    Vehicle findById(Long id);
-    Vehicle addVehicle(Vehicle vehicle);
-    Vehicle updateVehicle(Long vehicleId, Vehicle vehicle);
+    VehicleResponse findAll(Pageable pageable);
+    VehicleDTO findById(Long id);
+    VehicleDTO addVehicle(Vehicle vehicle);
+    VehicleDTO updateVehicle(Long vehicleId, Vehicle vehicle);
     void deleteVehicle(Long vehicleId);
 
     // Sorting, API #2
-    List<Vehicle> sortBy(String field, String direction);
+    List<VehicleDTO> sortBy(String field, String direction);
 
     // Filtering, API #3
-    List<Vehicle> filter(String brand, String shape, Integer year, Boolean accident);
+    List<VehicleDTO> filter(String brand, String shape, Integer year, Boolean accident);
 }

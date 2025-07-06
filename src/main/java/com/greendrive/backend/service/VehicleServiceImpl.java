@@ -2,7 +2,10 @@ package com.greendrive.backend.service;
 
 import com.greendrive.backend.exception.APIException;
 import com.greendrive.backend.model.Vehicle;
+import com.greendrive.backend.payload.VehicleDTO;
+import com.greendrive.backend.payload.VehicleResponse;
 import com.greendrive.backend.repository.VehicleRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,82 +18,96 @@ import java.util.stream.Collectors;
 public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public VehicleServiceImpl(VehicleRepository vehicleRepository) {
+    public VehicleServiceImpl(VehicleRepository vehicleRepository, ModelMapper modelMapper) {
         this.vehicleRepository = vehicleRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Page<Vehicle> findAll(Pageable pageable) {
+    public VehicleResponse findAll(Pageable pageable) {
         Page<Vehicle> vehicles = vehicleRepository.findAll(pageable);
 
-        if (vehicles.isEmpty()) {
-            throw new APIException("No vehicles found");
-        }
-        return vehicles;
+        List<VehicleDTO> vehicleDTOs = vehicles.stream()
+                .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
+                .toList();
+        return new VehicleResponse(
+                vehicleDTOs,
+                vehicles.getNumber(),
+                vehicles.getSize(),
+                vehicles.getTotalElements(),
+                vehicles.getTotalPages(),
+                vehicles.isLast()
+        );
     }
 
     @Override
-    public Vehicle findById(Long vehicleId) {
-        return vehicleRepository.findById(vehicleId)
+    public VehicleDTO findById(Long vehicleId) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
+        return modelMapper.map(vehicle, VehicleDTO.class);
     }
 
     @Override
-    public List<Vehicle> sortBy(String field, String direction) {
+    public List<VehicleDTO> sortBy(String field, String direction) {
         Sort.Direction dir = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
 
-        if (field.equalsIgnoreCase("price") || field.equalsIgnoreCase("mileage")) {
-            return vehicleRepository.findAll(Sort.by(dir, field));
-        } else {
+        if (!field.equalsIgnoreCase("price") && !field.equalsIgnoreCase("mileage")) {
             throw new APIException("Sorting by field not supported: " + field);
         }
+
+        return vehicleRepository.findAll(Sort.by(dir, field)).stream()
+                .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Vehicle> filter(String brand, String shape, Integer year, Boolean accident) {
+    public List<VehicleDTO> filter(String brand, String shape, Integer year, Boolean accident) {
         return vehicleRepository.findAll().stream()
                 .filter(v -> brand == null || v.getMake().equalsIgnoreCase(brand))
                 .filter(v -> shape == null || v.getShape().equalsIgnoreCase(shape))
                 .filter(v -> year == null || v.getYear() == year)
                 .filter(v -> accident == null || v.isAccidentHistory() == accident)
+                .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Vehicle addVehicle(Vehicle vehicle) {
-        Vehicle savedVehicle = vehicleRepository.findByVin(vehicle.getVin());
+    public VehicleDTO addVehicle(Vehicle vehicle) {
+        Vehicle existingVehicle = vehicleRepository.findByVin(vehicle.getVin());
 
-        if (savedVehicle != null) {
+        if (existingVehicle != null) {
             throw new APIException("Vehicle with vin#: " + vehicle.getVin() + " already exists");
         }
-        return vehicleRepository.save(vehicle);
+        Vehicle savedVehicle = vehicleRepository.save(vehicle);
+        return modelMapper.map(savedVehicle, VehicleDTO.class);
     }
 
     @Override
-    public Vehicle updateVehicle(Long vehicleId, Vehicle vehicle) {
-        Vehicle savedVehicle = vehicleRepository.findById(vehicleId)
+    public VehicleDTO updateVehicle(Long vehicleId, Vehicle vehicle) {
+        Vehicle existingVehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
 
-        savedVehicle.setVin(vehicle.getVin());
-        savedVehicle.setMake(vehicle.getMake());
-        savedVehicle.setShape(vehicle.getShape());
-        savedVehicle.setModel(vehicle.getModel());
-        savedVehicle.setColor(vehicle.getColor());
-        savedVehicle.setYear(vehicle.getYear());
-        savedVehicle.setMileage(vehicle.getMileage());
-        savedVehicle.setAccidentHistory(vehicle.isAccidentHistory());
-        savedVehicle.setPrice(vehicle.getPrice());
-        vehicleRepository.save(savedVehicle);
-        return savedVehicle;
+        existingVehicle.setVin(vehicle.getVin());
+        existingVehicle.setMake(vehicle.getMake());
+        existingVehicle.setShape(vehicle.getShape());
+        existingVehicle.setModel(vehicle.getModel());
+        existingVehicle.setColor(vehicle.getColor());
+        existingVehicle.setYear(vehicle.getYear());
+        existingVehicle.setMileage(vehicle.getMileage());
+        existingVehicle.setAccidentHistory(vehicle.isAccidentHistory());
+        existingVehicle.setPrice(vehicle.getPrice());
+        Vehicle updatedVehicle = vehicleRepository.save(existingVehicle);
+        return modelMapper.map(updatedVehicle, VehicleDTO.class);
     }
 
     @Override
     public void deleteVehicle(Long vehicleId) {
-        Vehicle savedVehicle = vehicleRepository.findById(vehicleId)
+        Vehicle existingVehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
 
-        vehicleRepository.delete(savedVehicle);
+        vehicleRepository.delete(existingVehicle);
     }
 }
