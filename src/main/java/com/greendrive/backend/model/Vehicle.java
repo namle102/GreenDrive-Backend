@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -44,4 +46,7 @@ public class Vehicle {
 
     @DecimalMin(value = "0.0", inclusive = false)
     private double price;
+
+    @ElementCollection
+    private List<String> imageUrls;
 }

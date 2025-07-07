@@ -58,13 +58,13 @@ public class VehicleController {
     }
 
     @PostMapping("/vehicles")
-    public ResponseEntity<VehicleDTO> addVehicle(@Valid @RequestBody Vehicle vehicle) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(vehicleService.addVehicle(vehicle));
+    public ResponseEntity<VehicleDTO> addVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(vehicleService.addVehicle(vehicleDTO));
     }
 
     @PutMapping("vehicles/{vehicleId}")
-    public ResponseEntity<VehicleDTO> updateVehicle(@PathVariable Long vehicleId, @Valid @RequestBody Vehicle vehicle) {
-        return ResponseEntity.status(HttpStatus.OK).body(vehicleService.updateVehicle(vehicleId, vehicle));
+    public ResponseEntity<VehicleDTO> updateVehicle(@PathVariable Long vehicleId, @Valid @RequestBody VehicleDTO vehicleDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(vehicleService.updateVehicle(vehicleId, vehicleDTO));
     }
 
     @DeleteMapping("vehicles/{vehicleId}")

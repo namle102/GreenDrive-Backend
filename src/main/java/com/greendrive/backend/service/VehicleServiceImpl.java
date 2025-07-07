@@ -75,7 +75,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public VehicleDTO addVehicle(Vehicle vehicle) {
+    public VehicleDTO addVehicle(VehicleDTO vehicleDTO) {
+        Vehicle vehicle = modelMapper.map(vehicleDTO, Vehicle.class);
         Vehicle existingVehicle = vehicleRepository.findByVin(vehicle.getVin());
 
         if (existingVehicle != null) {
@@ -86,19 +87,21 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public VehicleDTO updateVehicle(Long vehicleId, Vehicle vehicle) {
+    public VehicleDTO updateVehicle(Long vehicleId, VehicleDTO vehicleDTO) {
         Vehicle existingVehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
 
-        existingVehicle.setVin(vehicle.getVin());
-        existingVehicle.setMake(vehicle.getMake());
-        existingVehicle.setShape(vehicle.getShape());
-        existingVehicle.setModel(vehicle.getModel());
-        existingVehicle.setColor(vehicle.getColor());
-        existingVehicle.setYear(vehicle.getYear());
-        existingVehicle.setMileage(vehicle.getMileage());
-        existingVehicle.setAccidentHistory(vehicle.isAccidentHistory());
-        existingVehicle.setPrice(vehicle.getPrice());
+        existingVehicle.setVin(vehicleDTO.getVin());
+        existingVehicle.setMake(vehicleDTO.getMake());
+        existingVehicle.setShape(vehicleDTO.getShape());
+        existingVehicle.setModel(vehicleDTO.getModel());
+        existingVehicle.setColor(vehicleDTO.getColor());
+        existingVehicle.setYear(vehicleDTO.getYear());
+        existingVehicle.setMileage(vehicleDTO.getMileage());
+        existingVehicle.setAccidentHistory(vehicleDTO.isAccidentHistory());
+        existingVehicle.setPrice(vehicleDTO.getPrice());
+        existingVehicle.setImageUrls(vehicleDTO.getImageUrls());
+
         Vehicle updatedVehicle = vehicleRepository.save(existingVehicle);
         return modelMapper.map(updatedVehicle, VehicleDTO.class);
     }
