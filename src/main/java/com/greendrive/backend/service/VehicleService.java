@@ -14,8 +14,8 @@ public interface VehicleService {
     // CRUD, API #1
     VehicleResponse findAll(Pageable pageable);
     VehicleDTO findById(Long id);
-    VehicleDTO addVehicle(Vehicle vehicle);
-    VehicleDTO updateVehicle(Long vehicleId, Vehicle vehicle);
+    VehicleDTO addVehicle(VehicleDTO vehicleDTO);
+    VehicleDTO updateVehicle(Long vehicleId, VehicleDTO vehicleDTO);
     void deleteVehicle(Long vehicleId);
 
     // Sorting, API #2

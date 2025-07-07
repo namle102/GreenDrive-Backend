@@ -2,6 +2,8 @@ package com.greendrive.backend.payload;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,5 +18,6 @@ public class VehicleDTO {
     private int year;
     private int mileage;
     private boolean accidentHistory;
-    private int price;
+    private double price;
+    private List<String> imageUrls;
 }
