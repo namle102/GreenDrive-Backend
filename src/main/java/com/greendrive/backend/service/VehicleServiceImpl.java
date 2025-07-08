@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public VehicleDTO findById(Long vehicleId) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
+                .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId, HttpStatus.NOT_FOUND));
         return modelMapper.map(vehicle, VehicleDTO.class);
     }
 
@@ -55,7 +56,7 @@ public class VehicleServiceImpl implements VehicleService {
         Sort.Direction dir = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
 
         if (!field.equalsIgnoreCase("price") && !field.equalsIgnoreCase("mileage")) {
-            throw new APIException("Sorting by field not supported: " + field);
+            throw new APIException("Sorting by field not supported: " + field, HttpStatus.BAD_REQUEST);
         }
 
         return vehicleRepository.findAll(Sort.by(dir, field)).stream()
@@ -80,7 +81,7 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle existingVehicle = vehicleRepository.findByVin(vehicle.getVin());
 
         if (existingVehicle != null) {
-            throw new APIException("Vehicle with vin#: " + vehicle.getVin() + " already exists");
+            throw new APIException("Vehicle with vin#: " + vehicle.getVin() + " already exists", HttpStatus.CONFLICT);
         }
         Vehicle savedVehicle = vehicleRepository.save(vehicle);
         return modelMapper.map(savedVehicle, VehicleDTO.class);
@@ -89,7 +90,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public VehicleDTO updateVehicle(Long vehicleId, VehicleDTO vehicleDTO) {
         Vehicle existingVehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
+                .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId, HttpStatus.NOT_FOUND));
 
         existingVehicle.setVin(vehicleDTO.getVin());
         existingVehicle.setMake(vehicleDTO.getMake());
@@ -110,7 +111,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public void deleteVehicle(Long vehicleId) {
         Vehicle existingVehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
+                .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId, HttpStatus.NOT_FOUND));
 
         vehicleRepository.delete(existingVehicle);
     }
