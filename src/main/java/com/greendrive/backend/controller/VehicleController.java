@@ -1,12 +1,10 @@
 package com.greendrive.backend.controller;
 
-import com.greendrive.backend.model.Vehicle;
 import com.greendrive.backend.payload.VehicleDTO;
 import com.greendrive.backend.payload.VehicleResponse;
 import com.greendrive.backend.service.VehicleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -55,6 +53,11 @@ public class VehicleController {
             @RequestParam(required = false) Boolean accident) {
         List<VehicleDTO> filtered = vehicleService.filter(brand, shape, year, accident);
         return ResponseEntity.status(HttpStatus.OK).body(filtered);
+    }
+
+    @GetMapping("/vehicles/deals")
+    public ResponseEntity<List<VehicleDTO>> getHotDeals() {
+        return ResponseEntity.status(HttpStatus.OK).body(vehicleService.findHotDeals());
     }
 
     @PostMapping("/vehicles")

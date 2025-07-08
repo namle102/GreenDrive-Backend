@@ -20,4 +20,5 @@ public class VehicleDTO {
     private boolean accidentHistory;
     private double price;
     private List<String> imageUrls;
+    private boolean hotDeal;
 }

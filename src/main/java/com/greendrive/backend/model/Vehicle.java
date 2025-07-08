@@ -49,4 +49,7 @@ public class Vehicle {
 
     @ElementCollection
     private List<String> imageUrls;
+
+    @Column(name = "hot_deal")
+    private Boolean hotDeal;
 }

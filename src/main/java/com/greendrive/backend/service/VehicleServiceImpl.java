@@ -101,6 +101,7 @@ public class VehicleServiceImpl implements VehicleService {
         existingVehicle.setAccidentHistory(vehicleDTO.isAccidentHistory());
         existingVehicle.setPrice(vehicleDTO.getPrice());
         existingVehicle.setImageUrls(vehicleDTO.getImageUrls());
+        existingVehicle.setHotDeal(vehicleDTO.isHotDeal());
 
         Vehicle updatedVehicle = vehicleRepository.save(existingVehicle);
         return modelMapper.map(updatedVehicle, VehicleDTO.class);
@@ -112,5 +113,12 @@ public class VehicleServiceImpl implements VehicleService {
                 .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId));
 
         vehicleRepository.delete(existingVehicle);
+    }
+
+    @Override
+    public List<VehicleDTO> findHotDeals() {
+        return vehicleRepository.findByHotDealTrue().stream()
+                .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
+                .collect(Collectors.toList());
     }
 }

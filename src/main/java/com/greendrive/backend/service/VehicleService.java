@@ -23,4 +23,7 @@ public interface VehicleService {
 
     // Filtering, API #3
     List<VehicleDTO> filter(String brand, String shape, Integer year, Boolean accident);
+
+    // Hot Deals, API #4
+    List<VehicleDTO> findHotDeals();
 }
