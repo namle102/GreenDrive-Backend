@@ -17,7 +17,7 @@ public class VehicleDTO {
     private String color;
     private int year;
     private int mileage;
-    private boolean accidentHistory;
+    private boolean accident;
     private double price;
     private List<String> imageUrls;
     private boolean hotDeal;

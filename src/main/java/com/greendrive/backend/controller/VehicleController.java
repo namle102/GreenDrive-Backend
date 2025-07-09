@@ -1,12 +1,11 @@
 package com.greendrive.backend.controller;
 
+import com.greendrive.backend.config.AppConstants;
 import com.greendrive.backend.payload.VehicleDTO;
 import com.greendrive.backend.payload.VehicleResponse;
 import com.greendrive.backend.service.VehicleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +24,19 @@ public class VehicleController {
 
     @GetMapping("/vehicles")
     public ResponseEntity<VehicleResponse> getAllVehicles(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        VehicleResponse result = vehicleService.findAll(pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+            @RequestParam(name = "page",
+                    defaultValue = AppConstants.PAGE_NUMBER,
+                    required = false) Integer page,
+            @RequestParam(name = "size",
+                    defaultValue = AppConstants.PAGE_SIZE,
+                    required = false) Integer size,
+            @RequestParam(name = "sortBy",
+                    defaultValue = AppConstants.SORT_BY,
+                    required = false) String sortBy,
+            @RequestParam(name = "sortDir",
+                    defaultValue = AppConstants.SORT_DIR,
+                    required = false) String sortDir) {
+        return ResponseEntity.status(HttpStatus.OK).body(vehicleService.findAll(page, size, sortBy, sortDir));
     }
 
     @GetMapping("/vehicles/{vehicleId}")
@@ -37,21 +44,15 @@ public class VehicleController {
         return ResponseEntity.status(HttpStatus.OK).body(vehicleService.findById(vehicleId));
     }
 
-    @GetMapping("/vehicles/sort")
-    public ResponseEntity<List<VehicleDTO>> sortVehicles(
-            @RequestParam String field,
-            @RequestParam(defaultValue = "asc") String direction) {
-        List<VehicleDTO> vehicles = vehicleService.sortBy(field, direction);
-        return ResponseEntity.status(HttpStatus.OK).body(vehicles);
-    }
-
     @GetMapping("/vehicles/filter")
     public ResponseEntity<List<VehicleDTO>> filterVehicles(
-            @RequestParam(required = false) String brand,
-            @RequestParam(required = false) String shape,
-            @RequestParam(required = false) Integer year,
-            @RequestParam(required = false) Boolean accident) {
-        List<VehicleDTO> filtered = vehicleService.filter(brand, shape, year, accident);
+            @RequestParam(name = "shape", required = false) String shape,
+            @RequestParam(name = "make", required = false) String make,
+            @RequestParam(name = "model", required = false) String model,
+            @RequestParam(name = "color", required = false) String color,
+            @RequestParam(name = "year", required = false) Integer year,
+            @RequestParam(name = "accident", required = false) Boolean accident) {
+        List<VehicleDTO> filtered = vehicleService.filter(shape, make, model, color, year, accident);
         return ResponseEntity.status(HttpStatus.OK).body(filtered);
     }
 

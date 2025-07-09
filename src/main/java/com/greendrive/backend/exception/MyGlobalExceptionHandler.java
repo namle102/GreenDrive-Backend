@@ -1,5 +1,6 @@
 package com.greendrive.backend.exception;
 
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -22,7 +23,6 @@ public class MyGlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
@@ -33,5 +33,23 @@ public class MyGlobalExceptionHandler {
         error.put("error", ex.getStatus().getReasonPhrase());
         error.put("message", ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(error);
+    }
+
+    // Handle errors like sorting/filtering by invalid fields (Spring Data JPA)
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<Map<String, String>> handlePropertyReferenceException(PropertyReferenceException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Bad Request");
+        error.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    // Generic fallback handler
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleAllUncaughtExceptions(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Internal Server Error");
+        error.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

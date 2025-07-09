@@ -42,7 +42,7 @@ public class Vehicle {
     private int mileage;
 
     @NotNull
-    private boolean accidentHistory;
+    private boolean accident;
 
     @DecimalMin(value = "0.0", inclusive = false)
     private double price;

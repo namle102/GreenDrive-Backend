@@ -8,6 +8,7 @@ import com.greendrive.backend.repository.VehicleRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -28,19 +29,24 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public VehicleResponse findAll(Pageable pageable) {
-        Page<Vehicle> vehicles = vehicleRepository.findAll(pageable);
+    public VehicleResponse findAll(Integer page, Integer size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
-        List<VehicleDTO> vehicleDTOs = vehicles.stream()
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Vehicle> vehiclePage = vehicleRepository.findAll(pageable);
+
+        List<VehicleDTO> vehicleDTOs = vehiclePage.stream()
                 .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
                 .toList();
         return new VehicleResponse(
                 vehicleDTOs,
-                vehicles.getNumber(),
-                vehicles.getSize(),
-                vehicles.getTotalElements(),
-                vehicles.getTotalPages(),
-                vehicles.isLast()
+                vehiclePage.getNumber(),
+                vehiclePage.getSize(),
+                vehiclePage.getTotalElements(),
+                vehiclePage.getTotalPages(),
+                vehiclePage.isLast()
         );
     }
 
@@ -52,25 +58,14 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<VehicleDTO> sortBy(String field, String direction) {
-        Sort.Direction dir = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-
-        if (!field.equalsIgnoreCase("price") && !field.equalsIgnoreCase("mileage")) {
-            throw new APIException("Sorting by field not supported: " + field, HttpStatus.BAD_REQUEST);
-        }
-
-        return vehicleRepository.findAll(Sort.by(dir, field)).stream()
-                .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<VehicleDTO> filter(String brand, String shape, Integer year, Boolean accident) {
+    public List<VehicleDTO> filter(String shape, String make, String model, String color, Integer year, Boolean accident) {
         return vehicleRepository.findAll().stream()
-                .filter(v -> brand == null || v.getMake().equalsIgnoreCase(brand))
                 .filter(v -> shape == null || v.getShape().equalsIgnoreCase(shape))
+                .filter(v -> make == null || v.getMake().equalsIgnoreCase(make))
+                .filter(v -> model == null || v.getModel().equalsIgnoreCase(model))
+                .filter(v -> color == null || v.getColor().equalsIgnoreCase(color))
                 .filter(v -> year == null || v.getYear() == year)
-                .filter(v -> accident == null || v.isAccidentHistory() == accident)
+                .filter(v -> accident == null || v.isAccident() == accident)
                 .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
                 .collect(Collectors.toList());
     }
@@ -99,7 +94,7 @@ public class VehicleServiceImpl implements VehicleService {
         existingVehicle.setColor(vehicleDTO.getColor());
         existingVehicle.setYear(vehicleDTO.getYear());
         existingVehicle.setMileage(vehicleDTO.getMileage());
-        existingVehicle.setAccidentHistory(vehicleDTO.isAccidentHistory());
+        existingVehicle.setAccident(vehicleDTO.isAccident());
         existingVehicle.setPrice(vehicleDTO.getPrice());
         existingVehicle.setImageUrls(vehicleDTO.getImageUrls());
         existingVehicle.setHotDeal(vehicleDTO.isHotDeal());

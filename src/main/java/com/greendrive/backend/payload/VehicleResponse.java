@@ -9,9 +9,9 @@ import java.util.List;
 public class VehicleResponse {
 
     private List<VehicleDTO> content;
-    private int pageNumber;
-    private int pageSize;
-    private long totalElements;
-    private int totalPages;
-    private boolean last;
+    private Integer pageNumber;
+    private Integer pageSize;
+    private Long totalElements;
+    private Integer totalPages;
+    private Boolean last;
 }
