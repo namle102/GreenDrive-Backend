@@ -1,5 +1,6 @@
 package com.greendrive.backend.exception;
 
+import com.greendrive.backend.payload.APIResponse;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,28 +29,22 @@ public class MyGlobalExceptionHandler {
 
     // Handle custom API exceptions with custom status
     @ExceptionHandler(APIException.class)
-    public ResponseEntity<Map<String, String>> handleAPIException(APIException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getStatus().getReasonPhrase());
-        error.put("message", ex.getMessage());
-        return ResponseEntity.status(ex.getStatus()).body(error);
+    public ResponseEntity<APIResponse> handleAPIException(APIException e) {
+        APIResponse apiResponse = new APIResponse(e.getMessage(), false);
+        return ResponseEntity.status(e.getStatus()).body(apiResponse);
     }
 
     // Handle errors like sorting/filtering by invalid fields (Spring Data JPA)
     @ExceptionHandler(PropertyReferenceException.class)
-    public ResponseEntity<Map<String, String>> handlePropertyReferenceException(PropertyReferenceException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", "Bad Request");
-        error.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    public ResponseEntity<APIResponse> handlePropertyReferenceException(PropertyReferenceException e) {
+        APIResponse apiResponse = new APIResponse(e.getMessage(), false);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 
     // Generic fallback handler
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> handleAllUncaughtExceptions(Exception ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", "Internal Server Error");
-        error.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    public ResponseEntity<APIResponse> handleAllUncaughtExceptions(Exception e) {
+        APIResponse apiResponse = new APIResponse(e.getMessage(), false);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 }
