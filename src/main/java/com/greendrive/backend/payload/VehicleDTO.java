@@ -10,15 +10,17 @@ import java.util.List;
 public class VehicleDTO {
 
     private Long id;
+    private Double price;
     private String vin;
     private String shape;
     private String make;
     private String model;
     private String color;
-    private int year;
-    private int mileage;
-    private boolean accident;
-    private double price;
+    private Integer year;
+    private Integer mileage;
+    private String description;
+    private Boolean newVehicle;
+    private Boolean accident;
+    private Boolean hotDeal;
     private List<String> imageUrls;
-    private boolean hotDeal;
 }
