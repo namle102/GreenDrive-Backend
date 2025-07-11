@@ -11,13 +11,14 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
 public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @DecimalMin(value = "0.0", inclusive = false)
+    private Double price;
 
     @NotBlank
     @Column(unique = true)
@@ -36,20 +37,27 @@ public class Vehicle {
     private String color;
 
     @Min(2000)
-    private int year;
+    private Integer year;
 
     @Min(0)
-    private int mileage;
+    private Integer mileage;
+
+    @Column(length = 1000)
+    private String description;
 
     @NotNull
-    private boolean accident;
+    @Column(name = "new_vehicle")
+    private Boolean newVehicle;
 
-    @DecimalMin(value = "0.0", inclusive = false)
-    private double price;
+    @NotNull
+    private Boolean accident;
+
+    @Column(name = "hot_deal")
+    private Boolean hotDeal;
 
     @ElementCollection
     private List<String> imageUrls;
 
-    @Column(name = "hot_deal")
-    private Boolean hotDeal;
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 }
