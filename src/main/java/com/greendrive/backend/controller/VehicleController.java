@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/vehicles")
 public class VehicleController {
 
     private final VehicleService vehicleService;
@@ -22,7 +22,7 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
-    @GetMapping("/vehicles")
+    @GetMapping
     public ResponseEntity<VehicleResponse> getAllVehicles(
             @RequestParam(name = "page",
                     defaultValue = AppConstants.PAGE_NUMBER,
@@ -39,12 +39,12 @@ public class VehicleController {
         return ResponseEntity.status(HttpStatus.OK).body(vehicleService.findAll(page, size, sortBy, sortDir));
     }
 
-    @GetMapping("/vehicles/{vehicleId}")
+    @GetMapping("/{vehicleId}")
     public ResponseEntity<VehicleDTO> getVehicle(@PathVariable Long vehicleId) {
         return ResponseEntity.status(HttpStatus.OK).body(vehicleService.findById(vehicleId));
     }
 
-    @GetMapping("/vehicles/filter")
+    @GetMapping("/filter")
     public ResponseEntity<List<VehicleDTO>> filterVehicles(
             @RequestParam(name = "shape", required = false) String shape,
             @RequestParam(name = "make", required = false) String make,
@@ -56,22 +56,22 @@ public class VehicleController {
         return ResponseEntity.status(HttpStatus.OK).body(filtered);
     }
 
-    @GetMapping("/vehicles/deals")
+    @GetMapping("/deals")
     public ResponseEntity<List<VehicleDTO>> getHotDeals() {
         return ResponseEntity.status(HttpStatus.OK).body(vehicleService.findHotDeals());
     }
 
-    @PostMapping("/vehicles")
+    @PostMapping
     public ResponseEntity<VehicleDTO> addVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(vehicleService.addVehicle(vehicleDTO));
     }
 
-    @PutMapping("vehicles/{vehicleId}")
+    @PutMapping("/{vehicleId}")
     public ResponseEntity<VehicleDTO> updateVehicle(@PathVariable Long vehicleId, @Valid @RequestBody VehicleDTO vehicleDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(vehicleService.updateVehicle(vehicleId, vehicleDTO));
     }
 
-    @DeleteMapping("vehicles/{vehicleId}")
+    @DeleteMapping("/{vehicleId}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable Long vehicleId) {
         vehicleService.deleteVehicle(vehicleId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

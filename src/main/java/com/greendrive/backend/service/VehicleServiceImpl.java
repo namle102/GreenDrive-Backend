@@ -65,7 +65,7 @@ public class VehicleServiceImpl implements VehicleService {
                 .filter(v -> model == null || v.getModel().equalsIgnoreCase(model))
                 .filter(v -> color == null || v.getColor().equalsIgnoreCase(color))
                 .filter(v -> year == null || v.getYear() == year)
-                .filter(v -> accident == null || v.isAccident() == accident)
+                .filter(v -> accident == null || v.getAccident() == accident)
                 .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
                 .collect(Collectors.toList());
     }
@@ -94,10 +94,10 @@ public class VehicleServiceImpl implements VehicleService {
         existingVehicle.setColor(vehicleDTO.getColor());
         existingVehicle.setYear(vehicleDTO.getYear());
         existingVehicle.setMileage(vehicleDTO.getMileage());
-        existingVehicle.setAccident(vehicleDTO.isAccident());
+        existingVehicle.setAccident(vehicleDTO.getAccident());
         existingVehicle.setPrice(vehicleDTO.getPrice());
         existingVehicle.setImageUrls(vehicleDTO.getImageUrls());
-        existingVehicle.setHotDeal(vehicleDTO.isHotDeal());
+        existingVehicle.setHotDeal(vehicleDTO.getHotDeal());
 
         Vehicle updatedVehicle = vehicleRepository.save(existingVehicle);
         return modelMapper.map(updatedVehicle, VehicleDTO.class);
