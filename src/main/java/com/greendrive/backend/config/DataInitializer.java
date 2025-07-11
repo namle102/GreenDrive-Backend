@@ -1,8 +1,11 @@
 package com.greendrive.backend.config;
 
 import com.greendrive.backend.model.Review;
+import com.greendrive.backend.model.User;
 import com.greendrive.backend.model.Vehicle;
+import com.greendrive.backend.model.enums.Role;
 import com.greendrive.backend.repository.ReviewRepository;
+import com.greendrive.backend.repository.UserRepository;
 import com.greendrive.backend.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -18,6 +21,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private final VehicleRepository vehicleRepository;
     private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
     private final Random random = new Random();
 
     private final List<String[]> imageSamples = List.of(
@@ -74,7 +78,9 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         reviewRepository.deleteAll();
         vehicleRepository.deleteAll();
+        userRepository.deleteAll();
 
+        // Create vehicles and reviews
         for (int i = 0; i < 50; i++) {
             String[] makeModel = makeModelShape.get(random.nextInt(makeModelShape.size()));
             String make = makeModel[0];
@@ -105,9 +111,20 @@ public class DataInitializer implements CommandLineRunner {
                 review.setComment(comments.get(random.nextInt(comments.size())));
                 review.setReviewer(reviewers.get(random.nextInt(reviewers.size())));
                 review.setVehicle(v);
-
                 reviewRepository.save(review);
             }
+        }
+
+        // Create 10 users (1 admin, 9 users)
+        for (int i = 1; i <= 10; i++) {
+            User user = new User();
+            user.setUsername("user" + i);
+            user.setEmail("user" + i + "@example.com");
+            user.setPassword("password" + i); // Plaintext (to be encoded later)
+            user.setFirstName("First" + i);
+            user.setLastName("Last" + i);
+            user.setRole(i == 1 ? Role.ADMIN : Role.USER); // First user is ADMIN
+            userRepository.save(user);
         }
     }
 }
