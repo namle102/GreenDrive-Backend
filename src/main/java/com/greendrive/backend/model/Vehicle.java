@@ -46,13 +46,12 @@ public class Vehicle {
     private String description;
 
     @NotNull
-    @Column(name = "new_vehicle")
     private Boolean newVehicle;
 
     @NotNull
     private Boolean accident;
 
-    @Column(name = "hot_deal")
+    @NotNull
     private Boolean hotDeal;
 
     @ElementCollection

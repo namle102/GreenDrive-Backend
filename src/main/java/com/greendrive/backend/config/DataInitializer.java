@@ -9,6 +9,7 @@ import com.greendrive.backend.repository.UserRepository;
 import com.greendrive.backend.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -22,6 +23,7 @@ public class DataInitializer implements CommandLineRunner {
     private final VehicleRepository vehicleRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final Random random = new Random();
 
     private final List<String[]> imageSamples = List.of(
@@ -120,7 +122,10 @@ public class DataInitializer implements CommandLineRunner {
             User user = new User();
             user.setUsername("user" + i);
             user.setEmail("user" + i + "@example.com");
-            user.setPassword("password" + i); // Plaintext (to be encoded later)
+
+            // Password is now hashed using BCrypt
+            user.setPassword(passwordEncoder.encode("password" + i));
+
             user.setFirstName("First" + i);
             user.setLastName("Last" + i);
             user.setRole(i == 1 ? Role.ADMIN : Role.USER); // First user is ADMIN
