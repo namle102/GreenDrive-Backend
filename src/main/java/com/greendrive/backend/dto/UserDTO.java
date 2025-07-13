@@ -1,4 +1,4 @@
-package com.greendrive.backend.payload;
+package com.greendrive.backend.dto;
 
 import com.greendrive.backend.model.enums.Role;
 import lombok.AllArgsConstructor;

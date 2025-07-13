@@ -1,9 +1,8 @@
 package com.greendrive.backend.controller;
 
-import com.greendrive.backend.payload.ReviewDTO;
+import com.greendrive.backend.dto.ReviewDTO;
 import com.greendrive.backend.service.ReviewService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
 package com.greendrive.backend.exception;
 
-import com.greendrive.backend.payload.APIResponse;
+import com.greendrive.backend.dto.APIResponse;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
