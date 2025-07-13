@@ -3,7 +3,6 @@ package com.greendrive.backend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-
 import java.util.List;
 
 @Entity
@@ -17,24 +16,23 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Min(0)
+    private Integer quantity;
+
     @DecimalMin(value = "0.0", inclusive = false)
     private Double price;
 
-    @NotBlank
-    @Column(unique = true)
-    private String vin;
+    @NotNull
+    private Boolean hotDeal;
 
     @NotBlank
     private String shape;
 
     @NotBlank
-    private String make;
+    private String brand;
 
     @NotBlank
     private String model;
-
-    @NotBlank
-    private String color;
 
     @Min(2000)
     private Integer year;
@@ -42,17 +40,23 @@ public class Vehicle {
     @Min(0)
     private Integer mileage;
 
-    @Column(length = 1000)
-    private String description;
-
     @NotNull
     private Boolean newVehicle;
 
     @NotNull
     private Boolean accident;
 
-    @NotNull
-    private Boolean hotDeal;
+    @NotBlank
+    private String exteriorColor;
+
+    @NotBlank
+    private String interiorColor;
+
+    @NotBlank
+    private String interiorMaterial;
+
+    @Column(length = 1000)
+    private String description;
 
     @ElementCollection
     private List<String> imageUrls;

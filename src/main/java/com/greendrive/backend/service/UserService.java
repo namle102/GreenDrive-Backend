@@ -1,6 +1,6 @@
 package com.greendrive.backend.service;
 
-import com.greendrive.backend.payload.UserDTO;
+import com.greendrive.backend.dto.UserDTO;
 
 import java.util.List;
 

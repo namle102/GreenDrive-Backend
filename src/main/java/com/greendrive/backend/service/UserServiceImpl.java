@@ -2,7 +2,7 @@ package com.greendrive.backend.service;
 
 import com.greendrive.backend.exception.APIException;
 import com.greendrive.backend.model.User;
-import com.greendrive.backend.payload.UserDTO;
+import com.greendrive.backend.dto.UserDTO;
 import com.greendrive.backend.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

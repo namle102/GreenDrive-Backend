@@ -42,15 +42,13 @@ public class AuthController {
             return "Error: Username is already taken!";
         }
 
-        User newUser = new User(
-                null,
-                user.getEmail(),
-                user.getUsername(),
-                encoder.encode(user.getPassword()),
-                user.getFirstName(),
-                user.getLastName(),
-                Role.USER  // Default role
-        );
+        User newUser = new User();
+        newUser.setEmail(user.getEmail());
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(encoder.encode(user.getPassword()));
+        newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
+        newUser.setRole(Role.USER);
 
         userRepository.save(newUser);
         return "User registered successfully!";

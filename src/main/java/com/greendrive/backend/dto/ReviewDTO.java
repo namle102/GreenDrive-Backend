@@ -1,4 +1,4 @@
-package com.greendrive.backend.payload;
+package com.greendrive.backend.dto;
 
 import lombok.*;
 
@@ -8,8 +8,8 @@ import lombok.*;
 public class ReviewDTO {
 
     private Long id;
-    private String reviewer;
     private Integer rating;
     private String comment;
     private Long vehicleId;
+    private String username;
 }

@@ -1,7 +1,6 @@
-package com.greendrive.backend.payload;
+package com.greendrive.backend.dto;
 
 import lombok.*;
-
 import java.util.List;
 
 @Data
@@ -10,17 +9,19 @@ import java.util.List;
 public class VehicleDTO {
 
     private Long id;
+    private Integer quantity;
     private Double price;
-    private String vin;
+    private Boolean hotDeal;
     private String shape;
-    private String make;
+    private String brand;
     private String model;
-    private String color;
     private Integer year;
     private Integer mileage;
-    private String description;
     private Boolean newVehicle;
     private Boolean accident;
-    private Boolean hotDeal;
+    private String exteriorColor;
+    private String interiorColor;
+    private String interiorMaterial;
+    private String description;
     private List<String> imageUrls;
 }

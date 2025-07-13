@@ -1,6 +1,6 @@
 package com.greendrive.backend.controller;
 
-import com.greendrive.backend.payload.UserDTO;
+import com.greendrive.backend.dto.UserDTO;
 import com.greendrive.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

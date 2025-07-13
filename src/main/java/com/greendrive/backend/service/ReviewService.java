@@ -1,6 +1,6 @@
 package com.greendrive.backend.service;
 
-import com.greendrive.backend.payload.ReviewDTO;
+import com.greendrive.backend.dto.ReviewDTO;
 
 import java.util.List;
 

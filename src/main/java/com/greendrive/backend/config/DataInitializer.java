@@ -9,17 +9,16 @@ import com.greendrive.backend.repository.UserRepository;
 import com.greendrive.backend.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
+    private final JdbcTemplate jdbcTemplate;
     private final VehicleRepository vehicleRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
@@ -61,10 +60,6 @@ public class DataInitializer implements CommandLineRunner {
             "Sporty design with impressive acceleration."
     );
 
-    private final List<String> reviewers = List.of(
-            "Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Helen"
-    );
-
     private final List<String> comments = List.of(
             "Amazing car!",
             "Smooth ride and great range.",
@@ -82,19 +77,27 @@ public class DataInitializer implements CommandLineRunner {
         vehicleRepository.deleteAll();
         userRepository.deleteAll();
 
-        // Create vehicles and reviews
+        // Reset auto-increment counters
+        jdbcTemplate.execute("ALTER TABLE review AUTO_INCREMENT = 1");
+        jdbcTemplate.execute("ALTER TABLE vehicle AUTO_INCREMENT = 1");
+        jdbcTemplate.execute("ALTER TABLE user AUTO_INCREMENT = 1");
+
+        // Create users first so we can assign reviews to them
+        List<User> users = createUsers();
+
         for (int i = 0; i < 50; i++) {
             String[] makeModel = makeModelShape.get(random.nextInt(makeModelShape.size()));
-            String make = makeModel[0];
+            String brand = makeModel[0];
             String model = makeModel[1];
             String shape = makeModel[2];
 
             Vehicle v = new Vehicle();
-            v.setVin("DUMMYVIN" + String.format("%05d", i));
-            v.setMake(make);
+            v.setBrand(brand);
             v.setModel(model);
             v.setShape(shape);
-            v.setColor(colors.get(random.nextInt(colors.size())));
+            v.setExteriorColor(colors.get(random.nextInt(colors.size())));
+            v.setInteriorColor(colors.get(random.nextInt(colors.size())));
+            v.setInteriorMaterial("Leather");
             v.setYear(random.nextInt(2024 - 2020 + 1) + 2020);
             v.setMileage(random.nextInt(60001));
             v.setDescription(descriptions.get(random.nextInt(descriptions.size())));
@@ -103,33 +106,35 @@ public class DataInitializer implements CommandLineRunner {
             v.setHotDeal(random.nextBoolean());
             v.setImageUrls(Arrays.asList(imageSamples.get(random.nextInt(imageSamples.size()))));
             v.setPrice(Math.round((random.nextDouble() * (80000 - 30000) + 30000) * 100.0) / 100.0);
+            v.setQuantity(3 + random.nextInt(5)); // 3–7 in stock
 
             vehicleRepository.save(v);
 
-            int numberOfReviews = 2 + random.nextInt(2); // 2–3 reviews
+            // Generate 2–3 reviews per vehicle
+            int numberOfReviews = 2 + random.nextInt(2);
             for (int j = 0; j < numberOfReviews; j++) {
                 Review review = new Review();
                 review.setRating(3 + random.nextInt(3)); // 3–5 stars
                 review.setComment(comments.get(random.nextInt(comments.size())));
-                review.setReviewer(reviewers.get(random.nextInt(reviewers.size())));
                 review.setVehicle(v);
+                review.setUser(users.get(random.nextInt(users.size())));
                 reviewRepository.save(review);
             }
         }
+    }
 
-        // Create 10 users (1 admin, 9 users)
+    private List<User> createUsers() {
+        List<User> users = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             User user = new User();
             user.setUsername("user" + i);
             user.setEmail("user" + i + "@example.com");
-
-            // Password is now hashed using BCrypt
             user.setPassword(passwordEncoder.encode("password" + i));
-
             user.setFirstName("First" + i);
             user.setLastName("Last" + i);
-            user.setRole(i == 1 ? Role.ADMIN : Role.USER); // First user is ADMIN
-            userRepository.save(user);
+            user.setRole(i == 1 ? Role.ADMIN : Role.USER);
+            users.add(userRepository.save(user));
         }
+        return users;
     }
 }
