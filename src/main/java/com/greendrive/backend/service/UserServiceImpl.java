@@ -2,7 +2,7 @@ package com.greendrive.backend.service;
 
 import com.greendrive.backend.exception.APIException;
 import com.greendrive.backend.model.User;
-import com.greendrive.backend.payload.UserDTO;
+import com.greendrive.backend.dto.UserDTO;
 import com.greendrive.backend.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +40,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
-        if (userRepository.existsByUsername(userDTO.getUsername())) {
-            throw new APIException("Username already taken", HttpStatus.CONFLICT);
-        }
-
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new APIException("Email already registered", HttpStatus.CONFLICT);
+        }
+
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
+            throw new APIException("Username already taken", HttpStatus.CONFLICT);
         }
 
         User user = modelMapper.map(userDTO, User.class);

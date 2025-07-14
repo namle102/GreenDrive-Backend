@@ -2,8 +2,8 @@ package com.greendrive.backend.service;
 
 import com.greendrive.backend.exception.APIException;
 import com.greendrive.backend.model.Vehicle;
-import com.greendrive.backend.payload.VehicleDTO;
-import com.greendrive.backend.payload.VehicleResponse;
+import com.greendrive.backend.dto.VehicleDTO;
+import com.greendrive.backend.dto.VehicleResponse;
 import com.greendrive.backend.repository.VehicleRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +37,12 @@ public class VehicleServiceImpl implements VehicleService {
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Vehicle> vehiclePage = vehicleRepository.findAll(pageable);
 
-        List<VehicleDTO> vehicleDTOs = vehiclePage.stream()
+        List<VehicleDTO> content = vehiclePage.stream()
                 .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
                 .toList();
+
         return new VehicleResponse(
-                vehicleDTOs,
+                content,
                 vehiclePage.getNumber(),
                 vehiclePage.getSize(),
                 vehiclePage.getTotalElements(),
@@ -58,13 +59,37 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    public VehicleResponse findHotDeals(Integer page, Integer size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Vehicle> vehiclePage = vehicleRepository.findByHotDealTrue(pageable);
+
+        List<VehicleDTO> content = vehiclePage.getContent()
+                .stream()
+                .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
+                .collect(Collectors.toList());
+
+        return new VehicleResponse(
+                content,
+                vehiclePage.getNumber(),
+                vehiclePage.getSize(),
+                vehiclePage.getTotalElements(),
+                vehiclePage.getTotalPages(),
+                vehiclePage.isLast()
+        );
+    }
+
+    @Override
     public List<VehicleDTO> filter(String shape, String make, String model, String color, Integer year, Boolean accident) {
         return vehicleRepository.findAll().stream()
                 .filter(v -> shape == null || v.getShape().equalsIgnoreCase(shape))
-                .filter(v -> make == null || v.getMake().equalsIgnoreCase(make))
+                .filter(v -> make == null || v.getBrand().equalsIgnoreCase(make))
                 .filter(v -> model == null || v.getModel().equalsIgnoreCase(model))
-                .filter(v -> color == null || v.getColor().equalsIgnoreCase(color))
-                .filter(v -> year == null || v.getYear() == year)
+                .filter(v -> color == null || v.getExteriorColor().equalsIgnoreCase(color))
+                .filter(v -> year == null || v.getYear().equals(year))
                 .filter(v -> accident == null || v.getAccident() == accident)
                 .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
                 .collect(Collectors.toList());
@@ -73,11 +98,6 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public VehicleDTO addVehicle(VehicleDTO vehicleDTO) {
         Vehicle vehicle = modelMapper.map(vehicleDTO, Vehicle.class);
-        Vehicle existingVehicle = vehicleRepository.findByVin(vehicle.getVin());
-
-        if (existingVehicle != null) {
-            throw new APIException("Vehicle with vin#: " + vehicle.getVin() + " already exists", HttpStatus.CONFLICT);
-        }
         Vehicle savedVehicle = vehicleRepository.save(vehicle);
         return modelMapper.map(savedVehicle, VehicleDTO.class);
     }
@@ -85,19 +105,23 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public VehicleDTO updateVehicle(Long vehicleId, VehicleDTO vehicleDTO) {
         Vehicle existingVehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new APIException("Vehicle not found with ID: " + vehicleId, HttpStatus.NOT_FOUND));
 
-        existingVehicle.setVin(vehicleDTO.getVin());
-        existingVehicle.setMake(vehicleDTO.getMake());
+        existingVehicle.setQuantity(vehicleDTO.getQuantity());
+        existingVehicle.setPrice(vehicleDTO.getPrice());
+        existingVehicle.setHotDeal(vehicleDTO.getHotDeal());
         existingVehicle.setShape(vehicleDTO.getShape());
+        existingVehicle.setBrand(vehicleDTO.getBrand());
         existingVehicle.setModel(vehicleDTO.getModel());
-        existingVehicle.setColor(vehicleDTO.getColor());
         existingVehicle.setYear(vehicleDTO.getYear());
         existingVehicle.setMileage(vehicleDTO.getMileage());
+        existingVehicle.setNewVehicle(vehicleDTO.getNewVehicle());
         existingVehicle.setAccident(vehicleDTO.getAccident());
-        existingVehicle.setPrice(vehicleDTO.getPrice());
+        existingVehicle.setExteriorColor(vehicleDTO.getExteriorColor());
+        existingVehicle.setInteriorColor(vehicleDTO.getInteriorColor());
+        existingVehicle.setInteriorMaterial(vehicleDTO.getInteriorMaterial());
+        existingVehicle.setDescription(vehicleDTO.getDescription());
         existingVehicle.setImageUrls(vehicleDTO.getImageUrls());
-        existingVehicle.setHotDeal(vehicleDTO.getHotDeal());
 
         Vehicle updatedVehicle = vehicleRepository.save(existingVehicle);
         return modelMapper.map(updatedVehicle, VehicleDTO.class);
@@ -109,12 +133,5 @@ public class VehicleServiceImpl implements VehicleService {
                 .orElseThrow(() -> new APIException("Vehicle not found with id: " + vehicleId, HttpStatus.NOT_FOUND));
 
         vehicleRepository.delete(existingVehicle);
-    }
-
-    @Override
-    public List<VehicleDTO> findHotDeals() {
-        return vehicleRepository.findByHotDealTrue().stream()
-                .map(vehicle -> modelMapper.map(vehicle, VehicleDTO.class))
-                .collect(Collectors.toList());
     }
 }

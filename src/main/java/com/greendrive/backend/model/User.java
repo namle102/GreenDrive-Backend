@@ -1,10 +1,10 @@
 package com.greendrive.backend.model;
 
+import com.greendrive.backend.model.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-
-import com.greendrive.backend.model.enums.Role;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,24 +17,27 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(unique = true)
-    private String username;
-
     @Email
-    @NotBlank
     @Column(unique = true)
     private String email;
 
     @NotBlank
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @NotBlank
     private String password;
 
-    @Column(name = "first_name")
+    @NotBlank
     private String firstName;
 
-    @Column(name = "last_name")
+    @NotBlank
     private String lastName;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 }
