@@ -118,10 +118,11 @@ public class DataInitializer implements CommandLineRunner {
 
     private List<User> createUsers() {
         List<User> users = new ArrayList<>();
+        // Add 1 admin and 9 users
         for (int i = 1; i <= 10; i++) {
             User user = new User();
-            user.setUsername("user" + i);
-            user.setEmail("user" + i + "@gmail.com");
+            user.setUsername(i == 1 ? "admin" + i : "user" + i);
+            user.setEmail(i == 1 ? "admin" + i + "@gmail.com" : "user" + i + "@gmail.com");
             user.setPassword(passwordEncoder.encode("password" + i));
             user.setFirstName("First" + i);
             user.setLastName("Last" + i);

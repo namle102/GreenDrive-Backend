@@ -173,3 +173,4 @@ If your token is valid and has role `ADMIN`, you can access:
 * `/api/admin/sales`
 * `/api/admin/event-log`
 * `/api/admin/usage`
+* `/api/admin/users`
