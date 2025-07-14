@@ -31,6 +31,6 @@ public class PO {
     private String lastName;
     private String shippingAddress;
     private String status;
-    private Integer cardInfo;
+    private Long cardInfo;
     private Double total;
 }
