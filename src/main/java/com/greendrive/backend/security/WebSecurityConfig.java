@@ -68,6 +68,9 @@ public class WebSecurityConfig {
                                 "/api/reviews/**",
                                 "/api/vehicles/**")
                         .permitAll()
+                        .requestMatchers(
+                                "/api/admin/**")
+                        .hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

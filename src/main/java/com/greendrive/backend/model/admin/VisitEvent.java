@@ -24,4 +24,5 @@ public class VisitEvent {
     private String day; // yyyyMMdd
     private String vehicleId;
     private String eventType; // "VIEW" or "PURCHASE"
+    private Integer quantity;
 }

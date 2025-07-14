@@ -23,7 +23,7 @@ public class POController {
                                                  HttpServletRequest request) {
         String ip = request.getRemoteAddr();
         po.getItems().forEach(item ->
-                visitEventService.logEvent(ip, String.valueOf(item.getVehicleId()), "PURCHASE")
+                visitEventService.logEvent(ip, String.valueOf(item.getVehicleId()), "PURCHASE", item.getQuantity())
         );
 
         POResponse response = poService.placeOrder(po);
