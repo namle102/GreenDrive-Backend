@@ -56,16 +56,17 @@ public class WebSecurityConfig {
                 .exceptionHandling(e -> e.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/api/test/all")
-                        .permitAll()
 //                        .requestMatchers(
 //                                "/api/auth/**",
-//                                "/api/test/all",
-//                                "/api/users/**",
-//                                "/api/vehicles/**")
+//                                "/api/test/all")
 //                        .permitAll()
+                        .requestMatchers(
+                                "/api/**",
+                                "/api/auth/**",
+                                "/api/test/all",
+                                "/api/users/**",
+                                "/api/vehicles/**")
+                        .permitAll()
                         .anyRequest().authenticated());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
