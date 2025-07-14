@@ -61,10 +61,11 @@ public class WebSecurityConfig {
 //                                "/api/test/all")
 //                        .permitAll()
                         .requestMatchers(
-                                "/api/**",
-                                "/api/auth/**",
                                 "/api/test/all",
+                                "/api/auth/**",
+                                "api/orders/**",
                                 "/api/users/**",
+                                "/api/reviews/**",
                                 "/api/vehicles/**")
                         .permitAll()
                         .anyRequest().authenticated());

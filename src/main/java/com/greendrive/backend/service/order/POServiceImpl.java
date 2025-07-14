@@ -22,22 +22,9 @@ public class POServiceImpl implements POService {
 
     @Override
     public POResponse placeOrder(PO po) {
-        // Check stock
-        for (POItem item : po.getItems()) {
-            Vehicle vehicle = vehicleRepository.findById(item.getVehicleId())
-                    .orElseThrow(() -> new APIException("Vehicle not found with id: " + item.getVehicleId(), HttpStatus.NOT_FOUND));
-
-            if (vehicle.getQuantity() < item.getQuantity()) {
-                throw new APIException("Not enough stock for vehicle: " + vehicle.getModel(), HttpStatus.BAD_REQUEST);
-            }
-        }
-
-        // If stock is enough
-        for (POItem item : po.getItems()) {
-            Vehicle vehicle = vehicleRepository.findById(item.getVehicleId()).get();
-            vehicle.setQuantity(vehicle.getQuantity() - item.getQuantity());
-            vehicleRepository.save(vehicle); // update stock
-        }
+        // Calculate total (applied 13% tax) and update stock
+        double total = OrderUtils.calculateTotalAndUpdateStock(po, vehicleRepository);
+        po.setTotal(total);
 
         // Generate unique order#
         String orderNumber = "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
