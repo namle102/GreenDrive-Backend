@@ -2,7 +2,6 @@ package com.greendrive.backend.service;
 
 import com.greendrive.backend.dto.VehicleDTO;
 import com.greendrive.backend.dto.VehicleResponse;
-
 import java.util.List;
 
 public interface VehicleService {

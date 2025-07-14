@@ -12,4 +12,5 @@ public class POItem {
 
     private Long vehicleId;
     private Integer quantity;
+    private Double price;
 }

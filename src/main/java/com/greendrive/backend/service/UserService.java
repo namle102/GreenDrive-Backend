@@ -1,7 +1,6 @@
 package com.greendrive.backend.service;
 
 import com.greendrive.backend.dto.UserDTO;
-
 import java.util.List;
 
 public interface UserService {

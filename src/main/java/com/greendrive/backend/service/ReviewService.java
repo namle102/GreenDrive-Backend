@@ -1,7 +1,6 @@
 package com.greendrive.backend.service;
 
 import com.greendrive.backend.dto.ReviewDTO;
-
 import java.util.List;
 
 public interface ReviewService {
