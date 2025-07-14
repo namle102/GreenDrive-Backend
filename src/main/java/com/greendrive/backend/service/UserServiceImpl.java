@@ -4,25 +4,21 @@ import com.greendrive.backend.exception.APIException;
 import com.greendrive.backend.model.User;
 import com.greendrive.backend.dto.UserDTO;
 import com.greendrive.backend.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public List<UserDTO> getAllUsers() {
@@ -50,6 +46,9 @@ public class UserServiceImpl implements UserService {
 
         User user = modelMapper.map(userDTO, User.class);
         user.setRole(userDTO.getRole() != null ? userDTO.getRole() : com.greendrive.backend.model.enums.Role.USER);
+
+        // Encode the password
+        user.setPassword(encoder.encode(userDTO.getPassword()));
 
         User savedUser = userRepository.save(user);
         return modelMapper.map(savedUser, UserDTO.class);

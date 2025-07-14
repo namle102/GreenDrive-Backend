@@ -5,8 +5,8 @@ import com.greendrive.backend.model.Vehicle;
 import com.greendrive.backend.dto.VehicleDTO;
 import com.greendrive.backend.dto.VehicleResponse;
 import com.greendrive.backend.repository.VehicleRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,16 +17,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public VehicleServiceImpl(VehicleRepository vehicleRepository, ModelMapper modelMapper) {
-        this.vehicleRepository = vehicleRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public VehicleResponse findAll(Integer page, Integer size, String sortBy, String sortDir) {

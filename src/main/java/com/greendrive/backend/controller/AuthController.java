@@ -5,7 +5,6 @@ import com.greendrive.backend.model.enums.Role;
 import com.greendrive.backend.repository.UserRepository;
 import com.greendrive.backend.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -8,32 +8,21 @@ import com.greendrive.backend.dto.ReviewDTO;
 import com.greendrive.backend.repository.ReviewRepository;
 import com.greendrive.backend.repository.UserRepository;
 import com.greendrive.backend.repository.VehicleRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final VehicleRepository vehicleRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public ReviewServiceImpl(ReviewRepository reviewRepository,
-                             VehicleRepository vehicleRepository,
-                             UserRepository userRepository,
-                             ModelMapper modelMapper) {
-        this.reviewRepository = reviewRepository;
-        this.vehicleRepository = vehicleRepository;
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public ReviewDTO addReview(Long vehicleId, ReviewDTO reviewDTO) {
