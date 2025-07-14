@@ -40,7 +40,7 @@ public class DataInitializer implements CommandLineRunner {
             }
     );
 
-    private final List<String[]> makeModelShape = List.of(
+    private final List<String[]> brandModelShape = List.of(
             new String[]{"Tesla", "Model 3", "Sedan"},
             new String[]{"BMW", "3 Series", "Sedan"},
             new String[]{"VinFast", "VF 8", "SUV"},
@@ -71,25 +71,18 @@ public class DataInitializer implements CommandLineRunner {
             "Exterior design could be better."
     );
 
+    List<String> materials = Arrays.asList("Leather", "Fabric", "Vinyl", "Synthetic");
+
     @Override
     public void run(String... args) {
-        reviewRepository.deleteAll();
-        vehicleRepository.deleteAll();
-        userRepository.deleteAll();
-
-        // Reset auto-increment counters
-        jdbcTemplate.execute("ALTER TABLE review AUTO_INCREMENT = 1");
-        jdbcTemplate.execute("ALTER TABLE vehicle AUTO_INCREMENT = 1");
-        jdbcTemplate.execute("ALTER TABLE user AUTO_INCREMENT = 1");
-
         // Create users first so we can assign reviews to them
         List<User> users = createUsers();
 
         for (int i = 0; i < 50; i++) {
-            String[] makeModel = makeModelShape.get(random.nextInt(makeModelShape.size()));
-            String brand = makeModel[0];
-            String model = makeModel[1];
-            String shape = makeModel[2];
+            String[] bms = brandModelShape.get(random.nextInt(brandModelShape.size()));
+            String brand = bms[0];
+            String model = bms[1];
+            String shape = bms[2];
 
             Vehicle v = new Vehicle();
             v.setBrand(brand);
@@ -97,7 +90,7 @@ public class DataInitializer implements CommandLineRunner {
             v.setShape(shape);
             v.setExteriorColor(colors.get(random.nextInt(colors.size())));
             v.setInteriorColor(colors.get(random.nextInt(colors.size())));
-            v.setInteriorMaterial("Leather");
+            v.setInteriorMaterial(materials.get(random.nextInt(materials.size())));
             v.setYear(random.nextInt(2024 - 2020 + 1) + 2020);
             v.setMileage(random.nextInt(60001));
             v.setDescription(descriptions.get(random.nextInt(descriptions.size())));
@@ -128,7 +121,7 @@ public class DataInitializer implements CommandLineRunner {
         for (int i = 1; i <= 10; i++) {
             User user = new User();
             user.setUsername("user" + i);
-            user.setEmail("user" + i + "@example.com");
+            user.setEmail("user" + i + "@gmail.com");
             user.setPassword(passwordEncoder.encode("password" + i));
             user.setFirstName("First" + i);
             user.setLastName("Last" + i);
