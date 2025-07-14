@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>Sign Up</h2>
+  <form id="signupForm">
+    <label>Username:
+      <input type="text" name="username" required />
+    </label>
+    <label>Email:
+      <input type="email" name="email" required />
+    </label>
+    <label>Password:
+      <input type="password" name="password" required />
+    </label>
+    <label>First Name:
+      <input type="text" name="firstName" required />
+    </label>
+    <label>Last Name:
+      <input type="text" name="lastName" required />
+    </label>
+    <button type="submit">Sign Up</button>
+  </form>
+  <div id="result"></div>
+</div>
+
+<script>
+  document.getElementById('signupForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const data = {
+      username: form.username.value,
+      email: form.email.value,
+      password: form.password.value,
+      firstName: form.firstName.value,
+      lastName: form.lastName.value
+    };
+
+    const response = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const text = await response.text();
+    document.getElementById('result').textContent = text;
+  });
+</script>
+
+</body>
+</html>

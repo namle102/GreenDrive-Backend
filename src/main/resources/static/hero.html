@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GreenDrive Hero</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<div id="top-bar">
+  <span id="userDisplay"></span>
+</div>
+
+<div class="container">
+  <h1>Welcome to Green Drive</h1>
+  <a href="/vehicle-list.html">
+    <button>Browse Vehicles</button>
+  </a>
+
+</div>
+
+<script>
+  const token = localStorage.getItem("token");
+  const username = localStorage.getItem("username");
+  const userDisplay = document.getElementById("userDisplay");
+
+  if (token && username) {
+    userDisplay.textContent = `Hi, ${username}`;
+  } else {
+    userDisplay.innerHTML = `
+            <button onclick="window.location.href='/signup.html'">Sign Up</button>
+            <button onclick="window.location.href='/login.html'">Login</button>
+        `;
+  }
+</script>
+
+</body>
+</html>

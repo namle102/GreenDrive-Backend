@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Available Vehicles</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 30px;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .nav-bar a {
+      text-decoration: none;
+      color: #2e8b57;
+      font-weight: bold;
+    }
+
+    .vehicle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .vehicle-card {
+      background-color: #fff;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .vehicle-card h3 {
+      margin: 10px 0 5px;
+    }
+
+    .vehicle-card p {
+      margin: 5px 0;
+      color: #555;
+    }
+
+    .vehicle-card img {
+      max-width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .vehicle-card button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #2e8b57;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .vehicle-card button:hover {
+      background-color: #246f45;
+    }
+
+    .controls-bar {
+      max-width: 1200px;
+      margin: auto;
+      padding: 10px 30px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .controls-bar select {
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .controls-bar label {
+      font-size: 14px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <a href="/hero.html">&#8592; Back to Hero</a>
+  <h2>Available Vehicles</h2>
+  <div></div>
+</div>
+
+<div class="controls-bar">
+  <label>
+    Sort by:
+    <select id="sortOption" onchange="fetchVehicles()">
+      <option value="">Default</option>
+      <option value="priceLow">Price (Low to High)</option>
+      <option value="priceHigh">Price (High to Low)</option>
+      <option value="year">Year (Newest First)</option>
+    </select>
+  </label>
+
+  <label>
+    Filter by Brand:
+    <select id="brandFilter" onchange="fetchVehicles()">
+      <option value="">All</option>
+      <option value="Tesla">Tesla</option>
+      <option value="Toyota">Toyota</option>
+      <option value="BMW">BMW</option>
+      <option value="Hyundai">Hyundai</option>
+      <option value="VinFast">VinFast</option>
+      <option value="Chevrolet">Chevrolet</option>
+      <option value="Ford">Ford</option>
+    </select>
+  </label>
+</div>
+
+<div class="vehicle-grid" id="vehicleGrid"></div>
+
+<script>
+  async function fetchVehicles() {
+    const sortValue = document.getElementById("sortOption").value;
+    const brand = document.getElementById("brandFilter").value;
+
+    let url;
+    if (brand) {
+      const params = new URLSearchParams({ brand });
+      url = `/api/vehicles/filter?${params.toString()}`;
+    } else {
+      const params = new URLSearchParams();
+      params.set('size', '100');
+      params.set('page', '0');
+
+      if (sortValue === 'priceLow') {
+        params.set('sortBy', 'price');
+        params.set('sortDir', 'asc');
+      } else if (sortValue === 'priceHigh') {
+        params.set('sortBy', 'price');
+        params.set('sortDir', 'desc');
+      } else if (sortValue === 'year') {
+        params.set('sortBy', 'year');
+        params.set('sortDir', 'desc');
+      }
+
+      url = `/api/vehicles?${params.toString()}`;
+    }
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const vehicles = data.content || data;
+    const grid = document.getElementById('vehicleGrid');
+    grid.innerHTML = '';
+
+    vehicles.forEach(vehicle => {
+      const card = document.createElement('div');
+      card.className = 'vehicle-card';
+
+      card.innerHTML = `
+                <img src="${vehicle.imageUrls?.[0] || 'https://via.placeholder.com/300x160'}" alt="Vehicle Image">
+                <h3>${vehicle.brand} ${vehicle.model}</h3>
+                <p>Year: ${vehicle.year}</p>
+                <p>Price: $${vehicle.price}</p>
+                <p>${vehicle.description}</p>
+                <button onclick="window.location.href='/vehicle-detail.html?id=${vehicle.id}'">View</button>
+            `;
+
+      grid.appendChild(card);
+    });
+  }
+
+  fetchVehicles();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Cart</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 30px;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .nav-bar a {
+      text-decoration: none;
+      color: #2e8b57;
+      font-weight: bold;
+    }
+
+    .cart-container {
+      max-width: 800px;
+      margin: 30px auto;
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item strong {
+      font-size: 16px;
+    }
+
+    .total {
+      text-align: right;
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .checkout-form {
+      margin-top: 30px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .checkout-form input {
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .place-order-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #2e8b57;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .place-order-btn:hover {
+      background-color: #246f45;
+    }
+  </style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <a href="/vehicle-list.html">&#8592; Back to Vehicles</a>
+  <h2>Your Cart</h2>
+  <div></div>
+</div>
+
+<div class="cart-container">
+  <div id="cartItems"></div>
+  <div class="total" id="cartTotal">Total: $0.00</div>
+
+  <form id="checkoutForm" class="checkout-form">
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="text" id="firstName" placeholder="First Name" required />
+    <input type="text" id="lastName" placeholder="Last Name" required />
+    <input type="text" id="address" placeholder="Shipping Address" required />
+    <button type="submit" class="place-order-btn">Place Order</button>
+  </form>
+</div>
+
+<script>
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartItemsDiv = document.getElementById("cartItems");
+  const cartTotalDiv = document.getElementById("cartTotal");
+
+  let total = 0;
+
+  cart.forEach(item => {
+    const subtotal = item.price * item.quantity;
+    total += subtotal;
+
+    const div = document.createElement("div");
+    div.className = "cart-item";
+    div.innerHTML = `
+        <strong>${item.brand} ${item.model}</strong> (${item.year})<br/>
+        $${item.price} × ${item.quantity}
+      `;
+    cartItemsDiv.appendChild(div);
+  });
+
+  cartTotalDiv.innerText = `Total: $${total.toFixed(2)}`;
+
+  // Handle form submission
+  document.getElementById("checkoutForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const firstName = document.getElementById("firstName").value;
+    const lastName = document.getElementById("lastName").value;
+    const address = document.getElementById("address").value;
+
+    const items = cart.map(item => ({
+      vehicleId: item.id,
+      quantity: item.quantity
+    }));
+
+    const order = {
+      email,
+      firstName,
+      lastName,
+      shippingAddress: address,
+      items
+    };
+
+    try {
+      const res = await fetch("/api/orders/place", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(order)
+      });
+
+      if (!res.ok) throw new Error("Order failed");
+
+      const data = await res.json();
+      alert(data.message + "\nOrder #: " + data.order.orderNumber);
+
+      // Clear cart
+      localStorage.removeItem("cart");
+      window.location.href = "/vehicle-list.html";
+    } catch (err) {
+      alert("Failed to place order: " + err.message);
+    }
+  });
+</script>
+
+</body>
+</html>

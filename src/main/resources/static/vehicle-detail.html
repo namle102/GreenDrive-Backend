@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vehicle Details</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: #2e8b57;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin: 8px 0;
+      font-size: 16px;
+    }
+
+    .bold-label {
+      font-weight: bold;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #2e8b57;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #246f45;
+    }
+
+    .cart-link {
+      float: right;
+      font-weight: bold;
+      color: #2e8b57;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a href="/vehicle-list.html" class="back-link">&larr; Back to Vehicles</a>
+  <a href="/cart.html" class="cart-link">Cart (<span id="cartCount">0</span>)</a>
+  <h2 id="vehicleTitle">Vehicle Details</h2>
+  <img id="vehicleImage" src="" alt="Vehicle Image">
+
+  <p><span class="bold-label">Brand:</span> <span id="brand"></span></p>
+  <p><span class="bold-label">Model:</span> <span id="model"></span></p>
+  <p><span class="bold-label">Year:</span> <span id="year"></span></p>
+  <p><span class="bold-label">Price:</span> $<span id="price"></span></p>
+  <p><span class="bold-label">Mileage:</span> <span id="mileage"></span> km</p>
+  <p><span class="bold-label">Exterior Color:</span> <span id="exteriorColor"></span></p>
+  <p><span class="bold-label">Interior Color:</span> <span id="interiorColor"></span></p>
+  <p><span class="bold-label">Interior Material:</span> <span id="interiorMaterial"></span></p>
+  <p><span class="bold-label">Description:</span> <span id="description"></span></p>
+
+  <button onclick="addToCart(currentVehicleId)">Add to Cart</button>
+</div>
+
+<script>
+  let currentVehicleId = null;
+
+  function getCart() {
+    return JSON.parse(localStorage.getItem("cart")) || [];
+  }
+
+  function updateCartCount() {
+    const cart = getCart();
+    document.getElementById("cartCount").textContent = cart.length;
+  }
+
+  function addToCart(vehicleId) {
+    const cart = getCart();
+    if (!cart.includes(vehicleId)) {
+      cart.push(vehicleId);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+      alert("Added to cart!");
+    } else {
+      alert("Already in cart.");
+    }
+  }
+
+  async function fetchDetail() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    if (!id) return;
+    currentVehicleId = id;
+    const res = await fetch(`/api/vehicles/${id}`);
+    const data = await res.json();
+
+    document.getElementById("vehicleTitle").textContent = `${data.brand} ${data.model}`;
+    document.getElementById("vehicleImage").src = data.imageUrls?.[0] || 'https://via.placeholder.com/700x300';
+    document.getElementById("brand").textContent = data.brand;
+    document.getElementById("model").textContent = data.model;
+    document.getElementById("year").textContent = data.year;
+    document.getElementById("price").textContent = data.price;
+    document.getElementById("mileage").textContent = data.mileage;
+    document.getElementById("exteriorColor").textContent = data.exteriorColor;
+    document.getElementById("interiorColor").textContent = data.interiorColor;
+    document.getElementById("interiorMaterial").textContent = data.interiorMaterial;
+    document.getElementById("description").textContent = data.description;
+  }
+
+  fetchDetail();
+  updateCartCount();
+</script>
+
+</body>
+</html>

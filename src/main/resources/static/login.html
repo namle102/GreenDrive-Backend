@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>Login</h2>
+  <form id="loginForm">
+    <label>Username:
+      <input type="text" name="username" required />
+    </label>
+    <label>Password:
+      <input type="password" name="password" required />
+    </label>
+    <button type="submit">Login</button>
+  </form>
+  <div id="result"></div>
+</div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const data = {
+      username: form.username.value,
+      password: form.password.value
+    };
+
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      const token = await response.text();
+      localStorage.setItem("token", token);
+      localStorage.setItem("username", form.username.value);
+      window.location.href = "/hero.html";
+    } else {
+      document.getElementById('result').textContent = "Login failed";
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -66,7 +66,14 @@ public class WebSecurityConfig {
                                 "api/orders/**",
                                 "/api/users/**",
                                 "/api/reviews/**",
-                                "/api/vehicles/**")
+                                "/api/vehicles/**",
+                                "/hero.html",
+                                "/vehicle-list.html",
+                                "vehicle-detail.html",
+                                "cart.html",
+                                "/signup.html",
+                                "/login.html",
+                                "/css/**")
                         .permitAll()
                         .anyRequest().authenticated());
 
