@@ -22,16 +22,12 @@ public class POServiceImpl implements POService {
 
     @Override
     public POResponse placeOrder(PO po) {
-        // Calculate total (applied 13% tax) and update stock
-        double total = OrderUtils.calculateTotalAndUpdateStock(po, vehicleRepository);
-        po.setTotal(total);
-
         // Generate unique order#
         String orderNumber = "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-
-        // Save order
         po.setOrderNumber(orderNumber);
         po.setStatus("ORDERED");
+
+        // Save order
         PO savedPO = poRepository.save(po);
 
         return new POResponse("Order placed successfully!", savedPO);
