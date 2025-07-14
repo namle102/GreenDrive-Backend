@@ -4,23 +4,24 @@ import com.greendrive.backend.config.AppConstants;
 import com.greendrive.backend.dto.VehicleDTO;
 import com.greendrive.backend.dto.VehicleResponse;
 import com.greendrive.backend.service.VehicleService;
+import com.greendrive.backend.service.admin.VisitEventService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Random;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/vehicles")
 public class VehicleController {
 
     private final VehicleService vehicleService;
-
-    @Autowired
-    public VehicleController(VehicleService vehicleService) {
-        this.vehicleService = vehicleService;
-    }
+    private final VisitEventService visitEventService;
 
     @GetMapping
     public ResponseEntity<VehicleResponse> getAllVehicles(
@@ -41,7 +42,10 @@ public class VehicleController {
     }
 
     @GetMapping("/{vehicleId}")
-    public ResponseEntity<VehicleDTO> getVehicle(@PathVariable Long vehicleId) {
+    public ResponseEntity<VehicleDTO> getVehicle(@PathVariable Long vehicleId,
+                                                 HttpServletRequest request) {
+        String ip = request.getRemoteAddr(); // real client IP
+        visitEventService.logEvent(ip, String.valueOf(vehicleId), "VIEW");
         return ResponseEntity.status(HttpStatus.OK).body(vehicleService.findById(vehicleId));
     }
 

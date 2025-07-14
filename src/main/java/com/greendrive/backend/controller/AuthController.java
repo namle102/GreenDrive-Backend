@@ -4,6 +4,7 @@ import com.greendrive.backend.model.User;
 import com.greendrive.backend.model.enums.Role;
 import com.greendrive.backend.repository.UserRepository;
 import com.greendrive.backend.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -19,17 +21,6 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final JwtUtil jwtUtils;
-
-    @Autowired
-    public AuthController(AuthenticationManager authenticationManager,
-                          UserRepository userRepository,
-                          PasswordEncoder encoder,
-                          JwtUtil jwtUtils) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.encoder = encoder;
-        this.jwtUtils = jwtUtils;
-    }
 
     // Register a new user
     @PostMapping("/signup")
