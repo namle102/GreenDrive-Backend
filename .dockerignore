@@ -1,9 +1,9 @@
 # Maven
 target/
 !target/*.jar
-!target/lib/
+!target/*.war
 
-# IDE
+# IDE files
 .idea/
 *.iws
 *.iml
@@ -13,8 +13,13 @@ target/
 .project
 .classpath
 
-# OS
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # Git
@@ -22,8 +27,8 @@ Thumbs.db
 .gitignore
 
 # Docker
-Dockerfile*
-docker-compose*
+Dockerfile
+docker-compose.yml
 .dockerignore
 
 # Logs
@@ -39,32 +44,18 @@ pids/
 # Coverage directory used by tools like istanbul
 coverage/
 
-# Dependency directories
-node_modules/
-
-# Optional npm cache directory
-.npm
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# dotenv environment variables file
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
 # Temporary folders
 tmp/
 temp/
 
 # Documentation
 README.md
-HELP.md 
+HELP.md
+
+# Test files
+src/test/
+
+# Maven wrapper
+.mvn/
+mvnw
+mvnw.cmd 
