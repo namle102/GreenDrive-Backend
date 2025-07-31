@@ -53,7 +53,7 @@ services:
   # Frontend (assuming React/Vite)
   frontend:
     build:
-      context: /Users/will/Documents/GitHub/4413FE  # Adjust this path to your frontend folder
+      context: ~/4413FE  # Adjust this path to your frontend folder
       dockerfile: Dockerfile
     container_name: greendrive-frontend-fullstack
     restart: unless-stopped
