@@ -1,0 +1,116 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: greendrive-mysql-fullstack
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: greendrive_db
+      MYSQL_USER: greendrive_user
+      MYSQL_PASSWORD: greendrive_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_fullstack_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - greendrive-fullstack-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Spring Boot Backend
+  backend:
+    build: .
+    container_name: greendrive-backend-fullstack
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/greendrive_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 12345678
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+      SPRING_JPA_PROPERTIES_HIBERATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      JWT_SECRET: thisIsMysecregtfrdesww233hoaiklasdleasdnamdgkjjhhtdhttebd54ns8877465sbbdd
+      JWT_EXPIRATION: 3600000
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - greendrive-fullstack-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Frontend (assuming React/Vite)
+  frontend:
+    build:
+      context: /Users/will/Documents/GitHub/4413FE  # Adjust this path to your frontend folder
+      dockerfile: Dockerfile
+    container_name: greendrive-frontend-fullstack
+    restart: unless-stopped
+    ports:
+      - "3000:3000"  # Adjust port based on your frontend
+    environment:
+      - VITE_API_URL=http://localhost:8080/api
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    networks:
+      - greendrive-fullstack-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # Nginx Reverse Proxy (optional - for production-like setup)
+  nginx:
+    image: nginx:alpine
+    container_name: greendrive-nginx-fullstack
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - greendrive-fullstack-network
+
+  # phpMyAdmin for database management
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: greendrive-phpmyadmin-fullstack
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: 12345678
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    networks:
+      - greendrive-fullstack-network
+
+volumes:
+  mysql_fullstack_data:
+    driver: local
+
+networks:
+  greendrive-fullstack-network:
+    driver: bridge 

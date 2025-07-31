@@ -1,0 +1,23 @@
+# Development Dockerfile for Spring Boot application
+FROM maven:3.9.6-eclipse-temurin-21
+
+# Set working directory
+WORKDIR /app
+
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copy source code
+COPY src ./src
+
+# Expose ports
+EXPOSE 8080 5005
+
+# Run the application with spring-boot-devtools for hot reload
+CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'"] 
