@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
         
         // Explicitly allow your frontend domain
         configuration.setAllowedOrigins(Arrays.asList(
-            "https://goldfish-app-4nvzt.ondigitalocean.app"
+            "https://goldfish-app-4nvzt.ondigitalocean.app",
             "https://4413groupa.me",
             "http://localhost:3000", // For local development
             "http://localhost:3001"  // Alternative local port
@@ -41,6 +41,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(
+                    "https://goldfish-app-4nvzt.ondigitalocean.app",
                     "https://frontend-4413-groupa-nfn6j.ondigitalocean.app",
                     "https://4413groupa.netlify.app",
                     "https://4413groupa.me",
