@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")               // apply to any /api/** endpoint
-                .allowedOrigins("http://localhost:5173", "http://localhost", "http://localhost:80", "http://localhost:443", "http://159.203.37.5", "https://159.203.37.5") // allow your Vite dev server
+                .allowedOrigins("http://localhost:5173", "http://localhost", "http://localhost:80", "http://localhost:443", "http://159.203.37.5", "https://159.203.37.5", "https://frontend-4413-groupa-nfn6j.ondigitalocean.app") // allow your Vite dev server
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
                 .exposedHeaders("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers")
@@ -33,7 +33,8 @@ public class WebConfig implements WebMvcConfigurer {
             "http://localhost:80", 
             "http://localhost:443", 
             "http://159.203.37.5", 
-            "https://159.203.37.5"
+            "https://159.203.37.5",
+            "https://frontend-4413-groupa-nfn6j.ondigitalocean.app"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
