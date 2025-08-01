@@ -65,7 +65,7 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/api/test/all",
                                 "/api/auth/**",
-                                "api/orders/**",
+                                "/api/orders/**", // Fixed missing slash
                                 "/api/users/**",
                                 "/api/reviews/**",
                                 "/api/vehicles/**")
