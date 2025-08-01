@@ -18,8 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
         
         // Explicitly allow your frontend domain
         configuration.setAllowedOrigins(Arrays.asList(
-            "https://frontend-4413-groupa-nfn6j.ondigitalocean.app",
-            "https://4413groupa.netlify.app",
+            "https://goldfish-app-4nvzt.ondigitalocean.app"
             "https://4413groupa.me",
             "http://localhost:3000", // For local development
             "http://localhost:3001"  // Alternative local port
