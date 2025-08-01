@@ -61,10 +61,7 @@ public class WebSecurityConfig {
                 .exceptionHandling(e -> e.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(
-//                                "/api/auth/**",
-//                                "/api/test/all")
-//                        .permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow all OPTIONS requests for CORS first
                         .requestMatchers(
                                 "/api/test/all",
                                 "/api/auth/**",
@@ -73,7 +70,6 @@ public class WebSecurityConfig {
                                 "/api/reviews/**",
                                 "/api/vehicles/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow all OPTIONS requests for CORS
                         .requestMatchers(
                                 "/api/admin/**")
                         .hasRole("ADMIN")

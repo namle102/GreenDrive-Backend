@@ -27,15 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:5173", 
-            "http://localhost", 
-            "http://localhost:80", 
-            "http://localhost:443", 
-            "http://159.203.37.5", 
-            "https://159.203.37.5",
-            "https://frontend-4413-groupa-nfn6j.ondigitalocean.app"
-        ));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*")); // Allow all origins for now
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList(
@@ -51,7 +43,7 @@ public class WebConfig implements WebMvcConfigurer {
         configuration.setMaxAge(3600L);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
+        source.registerCorsConfiguration("/**", configuration); // Apply to all paths
         return source;
     }
 }
