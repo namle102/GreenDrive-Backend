@@ -12,6 +12,25 @@ import java.util.Arrays;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins(
+                    "https://goldfish-app-4nvzt.ondigitalocean.app",
+                    "https://frontend-4413-groupa-nfn6j.ondigitalocean.app",
+                    "https://4413groupa.netlify.app",
+                    "https://4413groupa.me",
+                    "https://www.4413groupa.me",
+                    "http://localhost:3000",
+                    "http://localhost:3001"
+                )
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
+    }
+    
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -41,6 +60,4 @@ public class WebConfig implements WebMvcConfigurer {
         source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
-
-
 }

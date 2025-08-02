@@ -65,6 +65,7 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/test/all",
                                 "/auth/**",
+                                "/api/auth/**",
                                 "/orders/**",
                                 "/users/**",
                                 "/reviews/**",
