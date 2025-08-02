@@ -19,6 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
         // Explicitly allow your frontend domain
         configuration.setAllowedOrigins(Arrays.asList(
             "https://goldfish-app-4nvzt.ondigitalocean.app",
+            "https://frontend-4413-groupa-nfn6j.ondigitalocean.app",
+            "https://4413groupa.netlify.app",
             "https://4413groupa.me",
             "http://localhost:3000", // For local development
             "http://localhost:3001"  // Alternative local port
@@ -33,24 +35,11 @@ public class WebConfig implements WebMvcConfigurer {
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // Register CORS for both root and API context path
         source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins(
-                    "https://goldfish-app-4nvzt.ondigitalocean.app",
-                    "https://frontend-4413-groupa-nfn6j.ondigitalocean.app",
-                    "https://4413groupa.netlify.app",
-                    "https://4413groupa.me",
-                    "http://localhost:3000",
-                    "http://localhost:3001"
-                )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-                .allowedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
+
 }

@@ -4,7 +4,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/test")
+@RequestMapping("/test")
 public class TestController {
 
     // Public — no login required

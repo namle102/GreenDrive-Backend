@@ -63,15 +63,15 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow all OPTIONS requests for CORS first
                         .requestMatchers(
-                                "/api/test/all",
-                                "/api/auth/**",
-                                "/api/orders/**", // Fixed missing slash
-                                "/api/users/**",
-                                "/api/reviews/**",
-                                "/api/vehicles/**")
+                                "/test/all",
+                                "/auth/**",
+                                "/orders/**",
+                                "/users/**",
+                                "/reviews/**",
+                                "/vehicles/**")
                         .permitAll()
                         .requestMatchers(
-                                "/api/admin/**")
+                                "/admin/**")
                         .hasRole("ADMIN")
                         .anyRequest().authenticated());
 
