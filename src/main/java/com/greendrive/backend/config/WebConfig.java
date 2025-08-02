@@ -17,9 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(
-                    "http://localhost:3000",
-                    "http://localhost:3001",
-                    "http://localhost:4000"
+                    "http://localhost:8081"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
@@ -33,9 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
         
         // Explicitly allow your frontend domain
         configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:3000",
-            "http://localhost:3001",
-            "http://localhost:4000"
+            "http://localhost:8081"
         ));
         
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
