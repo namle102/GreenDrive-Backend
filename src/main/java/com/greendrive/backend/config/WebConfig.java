@@ -22,6 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
             "https://frontend-4413-groupa-nfn6j.ondigitalocean.app",
             "https://4413groupa.netlify.app",
             "https://4413groupa.me",
+            "https://www.4413groupa.me",
             "http://localhost:3000", // For local development
             "http://localhost:3001"  // Alternative local port
         ));
