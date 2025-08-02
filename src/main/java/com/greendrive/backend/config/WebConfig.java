@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(
                     "http://4413groupa.me",
-                    "https://4413groupa.me"
+                    "https://4413groupa.me",
                     "https://orca-app-o8ajg.ondigitalocean.app"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
@@ -34,7 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
         // Explicitly allow your frontend domain
         configuration.setAllowedOrigins(Arrays.asList(
             "http://4413groupa.me",
-            "https://4413groupa.me"
+            "https://4413groupa.me",
             "https://orca-app-o8ajg.ondigitalocean.app"
         ));
         
