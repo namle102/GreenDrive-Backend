@@ -19,7 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                     "http://4413groupa.me",
                     "https://4413groupa.me",
-                    "https://orca-app-o8ajg.ondigitalocean.app"
+                    "https://orca-app-o8ajg.ondigitalocean.app",
+                    "http://localhost:5173"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
@@ -35,7 +36,8 @@ public class WebConfig implements WebMvcConfigurer {
         configuration.setAllowedOrigins(Arrays.asList(
             "http://4413groupa.me",
             "https://4413groupa.me",
-            "https://orca-app-o8ajg.ondigitalocean.app"
+            "https://orca-app-o8ajg.ondigitalocean.app",
+            "http://localhost:5173"
         ));
         
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
