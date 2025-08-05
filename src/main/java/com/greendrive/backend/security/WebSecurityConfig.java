@@ -72,7 +72,6 @@ public class WebSecurityConfig {
                                 "/vehicles/**",
                                 "/admin/**")
                         .permitAll()
-                        .anyRequest().authenticated());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
