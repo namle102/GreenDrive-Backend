@@ -71,8 +71,7 @@ public class WebSecurityConfig {
                                 "/reviews/**",
                                 "/vehicles/**",
                                 "/admin/**")
-                        .permitAll();
-
+                        .permitAll());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
