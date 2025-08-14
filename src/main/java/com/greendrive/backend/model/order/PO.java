@@ -25,6 +25,7 @@ public class PO {
     private String email;
 
     @ElementCollection
+    @CollectionTable(name = "po_items", joinColumns = @JoinColumn(name = "po_id"))
     private List<POItem> items;
 
     private String firstName;
