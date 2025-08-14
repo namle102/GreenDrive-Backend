@@ -75,6 +75,11 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        // Check if data already exists to avoid re-initialization
+        if (userRepository.count() > 0) {
+            return;
+        }
+        
         // Create users first so we can assign reviews to them
         List<User> users = createUsers();
 
