@@ -2,23 +2,23 @@
 
 This is the Spring Boot backend system for the **GreenDrive** electric vehicle store project. It includes APIs for:
 
-* User registration and login (with JWT security)
-* Vehicle management (CRUD, sorting, filtering, hot deals)
-* Order placement and tracking
-* Admin reports (event logs, usage summary, sales report)
+- User registration and login (with JWT security)
+- Vehicle management (CRUD, sorting, filtering, hot deals)
+- Order placement and tracking
+- Admin reports (event logs, usage summary, sales report)
 
 ---
 
 ## 🛠️ Technologies
 
-* Java 21
-* Spring Boot 3.5.2
-* Spring Security + JWT
-* MySQL
-* Maven
-* JPA + Hibernate
-* Lombok
-* ModelMapper
+- Java 21
+- Spring Boot 3.5.2
+- Spring Security + JWT
+- MySQL
+- Maven
+- JPA + Hibernate
+- Lombok
+- ModelMapper
 
 ---
 
@@ -46,7 +46,6 @@ spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.ser
 
 # JPA/Hibernate
 spring.jpa.hibernate.ddl-auto=create-drop
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 
 # JWT Configuration
 jwt.secret=thisIsMysecregtfrdesww233hoaiklasdleasdnamdgkjjhhtdhttebd54ns8877465sbbdd
@@ -138,9 +137,9 @@ Authorization: Bearer <your_token>
 
 To help you test the backend easily, the app includes a `DataInitializer` class that runs on startup and:
 
-* Creates sample users (1 admin and 9 regular users)
-* Populates the database with sample vehicles
-* Randomly assigns reviews to all vehicles
+- Creates sample users (1 admin and 9 regular users)
+- Populates the database with sample vehicles
+- Randomly assigns reviews to all vehicles
 
 You can modify or disable this by editing the `DataInitializer` class.
 
@@ -152,17 +151,17 @@ All APIs were tested using Postman.
 
 ### 🔍 1. To Test Endpoints
 
-* Make sure your MySQL server is running
-* Ensure `application.properties` is configured properly
-* Start the app using `mvn spring-boot:run`
+- Make sure your MySQL server is running
+- Ensure `application.properties` is configured properly
+- Start the app using `mvn spring-boot:run`
 
 ### 🛡️ 2. Testing Admin Endpoints
 
 To test `/api/admin/**` endpoints:
 
-* Login via `/api/auth/signin` using the default admin credentials
-* Copy the JWT token from the login response
-* Add this token in your Postman request header:
+- Login via `/api/auth/signin` using the default admin credentials
+- Copy the JWT token from the login response
+- Add this token in your Postman request header:
 
 ```http
 Authorization: Bearer <your_token>
@@ -170,7 +169,7 @@ Authorization: Bearer <your_token>
 
 If your token is valid and has role `ADMIN`, you can access:
 
-* `/api/admin/sales`
-* `/api/admin/event-log`
-* `/api/admin/usage`
-* `/api/admin/users`
+- `/api/admin/sales`
+- `/api/admin/event-log`
+- `/api/admin/usage`
+- `/api/admin/users`

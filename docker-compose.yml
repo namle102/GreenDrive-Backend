@@ -35,7 +35,6 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 12345678
       SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
       JWT_SECRET: thisIsMysecregtfrdesww233hoaiklasdleasdnamdgkjjhhtdhttebd54ns8877465sbbdd
       JWT_EXPIRATION: 3600000
     depends_on:
