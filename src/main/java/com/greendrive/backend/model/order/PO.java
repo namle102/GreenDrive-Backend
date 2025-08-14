@@ -24,8 +24,12 @@ public class PO {
     @NotBlank
     private String email;
 
-    @ElementCollection
-    @CollectionTable(name = "po_items", joinColumns = @JoinColumn(name = "po_id"))
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+        name = "po_items", 
+        joinColumns = @JoinColumn(name = "po_id"),
+        foreignKey = @ForeignKey(name = "fk_po_items_po_id")
+    )
     private List<POItem> items;
 
     private String firstName;
